@@ -29,5 +29,3 @@ EXPOSE 8000
 
 COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
