@@ -1,0 +1,34 @@
+
+localhost:443 {
+  reverse_proxy web:8000
+  tls internal  # Use Caddy's internal certificate for localhost
+  handle_path /static/* {
+    root * /srv/staticfiles
+    file_server
+  }
+  handle_path /media/* {
+    root * /srv/media
+    file_server
+  }
+}
+
+{$SITE_URL}:443 {
+  reverse_proxy web:8000
+  tls {$EMAIL}
+  encode zstd gzip
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer-when-downgrade"
+    X-XSS-Protection "1; mode=block"
+  }
+  handle_path /static/* {
+    root * /srv/staticfiles
+    file_server
+  }
+  handle_path /media/* {
+    root * /srv/media
+    file_server
+  }
+}
